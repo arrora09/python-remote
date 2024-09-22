@@ -330,3 +330,6 @@ frontendfiles/*.ntvs*
 frontendfiles/*.njsproj
 frontendfiles/*.sln
 frontendfiles/*.sw?
+
+
+.idea

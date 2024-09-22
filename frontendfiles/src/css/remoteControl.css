@@ -1,10 +1,10 @@
 body {
-  height: 100vh;
   width: 100vw;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  height: 100vh;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: start !important;
+  align-items: center !important;
 }
 
 .remote-container {
@@ -13,8 +13,8 @@ body {
   align-items: center;
   background-color: #1c1c1e;
   color: #fff;
-  width: 350px;
-  padding: 20px;
+  width: 300px;
+  padding: 10px;
   border-radius: 20px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
   font-family: Arial, sans-serif;
@@ -33,21 +33,21 @@ body {
 }
 
 .upper-container {
-  width: 350px;
-  height: fit-content;
+  width: 300px;
+  height: 170px;
   display: flex;
   flex-direction: row;
-  align-items: start;
+  align-items: center;
   justify-content: center;
   margin-top: 20px;
 }
 
 .arrows-container {
   position: relative;
-  min-width: 170px;
-  max-width: 170px;
-  min-height: 170px;
-  max-height: 170px;
+  min-width: 150px;
+  max-width: 150px;
+  min-height: 150px;
+  max-height: 150px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -61,8 +61,8 @@ body {
   background-color: #2c2c2e;
   padding: 10px;
   border-radius: 50%;
-  width: 45px;
-  height: 45px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -86,12 +86,12 @@ body {
 .arrows-container .side-arrows .arrow-left {
   position: absolute;
   left: 0;
-  transform: translateY(55px);
+  transform: translateY(45px);
 }
 .arrows-container .side-arrows .arrow-right {
   position: absolute;
   right: 0;
-  transform: translateY(55px);
+  transform: translateY(45px);
 }
 .arrows-container .arrow-down {
   bottom: 0;
@@ -111,26 +111,25 @@ body {
   width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: start;
+  justify-content: center;
   align-items: center;
   margin-bottom: 10px;
-  gap: 5px;
+  gap: 10px;
 }
 .input-section .input-row .text-input {
   padding: 10px;
-  width: 210px;
+  width: 180px;
   border-radius: 10px;
   border: none;
   background-color: #2c2c2e;
   color: #fff;
   height: 30px;
   font-size: large;
-  margin-right: 5px;
   justify-content: center;
   align-items: start;
 }
 .input-section .input-row .send-button {
-  min-width: 90px !important;
+  min-width: 70px !important;
   height: 30px;
   display: flex;
   flex-direction: column;
@@ -161,7 +160,7 @@ body {
   align-items: center;
   justify-content: center;
   transition: background-color 0.3s ease;
-  width: 35%;
+  width: 75px;
   padding: 10px;
   border-radius: 10px;
   border: none;
