@@ -11,5 +11,5 @@ Features:
 - LMB, RMB
 - joystick for mouse moving
 
-TODO: java android app for the frontend
+Android app: https://github.com/arrora09/remote-app.git
 
