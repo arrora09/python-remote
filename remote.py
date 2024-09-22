@@ -65,7 +65,8 @@ def right():
 @app.route("/typeText", methods=["POST"], strict_slashes=False)
 def typeText():
     text = request.json["text"]
-    keyboard.type(text)
+    if text:
+        keyboard.type(text)
     return "ok"
 
 
@@ -113,12 +114,20 @@ def clickRight():
 
 @app.route("/moveMouse", methods=["POST"], strict_slashes=False)
 def moveMouse():
-    x = request.json["x"]
-    y = request.json["y"]
-    oldX, oldY = pyautogui.position()
-    pyautogui.moveTo(oldX + (x * 30), oldY - (y * 30))
+    try:
+        x = request.json["x"]
+        y = request.json["y"]
+        speed = int(request.json["speed"])
+        if x and y and speed:
+            oldX, oldY = pyautogui.position()
+            try:
+                pyautogui.moveTo(oldX + (x * speed), oldY - (y * speed))
+            except pyautogui.FailSafeException:
+                pass
+    except ValueError:
+        pass
     return "ok"
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True)
+    app.run(host="0.0.0.0", debug=False)
