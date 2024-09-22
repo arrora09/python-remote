@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FaVolumeUp,
   FaVolumeDown,
@@ -13,7 +13,11 @@ import { HiMiniPlayPause } from "react-icons/hi2";
 import { AiOutlineEnter } from "react-icons/ai";
 import { ImTab } from "react-icons/im";
 import { Joystick } from "react-joystick-component";
-import { IoIosSkipBackward, IoIosSkipForward } from "react-icons/io";
+import {
+  IoIosSettings,
+  IoIosSkipBackward,
+  IoIosSkipForward,
+} from "react-icons/io";
 import { PiMouseLeftClick, PiMouseRightClick } from "react-icons/pi";
 import { GoTriangleUp } from "react-icons/go";
 import {
@@ -22,42 +26,72 @@ import {
   RxTriangleRight,
   RxTriangleUp,
 } from "react-icons/rx";
+import { RemoteSettings } from "./RemoteSettings.jsx";
+import { CiSettings } from "react-icons/ci";
+
+export const saveDataToLocalStorage = (key, data) => {
+  localStorage.setItem(key, JSON.stringify(data));
+};
+
+export const getDataFromLocalStorage = (key) => {
+  const data = JSON.parse(localStorage.getItem(key));
+  //console.log(data);
+  if (data == null) {
+    return;
+  }
+  return data;
+};
+
+export const createEvent = (address, payload) => {
+  try {
+    fetch(address, payload ?? {});
+  } catch (e) {}
+};
 
 export const RemoteControl = () => {
-  const [host, setHost] = useState("");
-  //const [host, setHost] = useState("http://localhost:5000");
+  const [host, setHost] = useState(
+    getDataFromLocalStorage("remoteData")
+      ? getDataFromLocalStorage("remoteData").host ?? ""
+      : "",
+  );
   const [text, setText] = useState("");
+  const [speed, setSpeed] = useState(
+    getDataFromLocalStorage("remoteData")
+      ? getDataFromLocalStorage("remoteData").speed ?? 30
+      : 30,
+  );
+  const [page, setPage] = useState("remote");
 
   function increaseVolume() {
-    fetch(host + "/volUp");
+    createEvent(host + "/volUp");
   }
 
   function decreaseVolume() {
-    fetch(host + "/volDown");
+    createEvent(host + "/volDown");
   }
 
   function muteVolume() {
-    fetch(host + "/volMute");
+    createEvent(host + "/volMute");
   }
 
   function togglePlayPause() {
-    fetch(host + "/playpause");
+    createEvent(host + "/playpause");
   }
 
   function moveUp() {
-    fetch(host + "/up");
+    createEvent(host + "/up");
   }
 
   function moveDown() {
-    fetch(host + "/down");
+    createEvent(host + "/down");
   }
 
   function moveLeft() {
-    fetch(host + "/left");
+    createEvent(host + "/left");
   }
 
   function moveRight() {
-    fetch(host + "/right");
+    createEvent(host + "/right");
   }
 
   const handleInputChange = (e) => {
@@ -66,7 +100,7 @@ export const RemoteControl = () => {
 
   const handleSend = () => {
     if (text) {
-      fetch(host + "/typeText", {
+      createEvent(host + "/typeText", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -78,46 +112,59 @@ export const RemoteControl = () => {
   };
 
   const handleEnter = () => {
-    fetch(host + "/enter");
+    createEvent(host + "/enter");
   };
 
   const handleBackspace = () => {
-    fetch(host + "/backspace");
+    createEvent(host + "/backspace");
   };
 
   const handleTab = () => {
-    fetch(host + "/tab");
+    createEvent(host + "/tab");
   };
 
   const handleMove = (e) => {
-    console.log("move");
-    fetch(host + "/moveMouse", {
+    //console.log("move");
+    createEvent(host + "/moveMouse", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ x: e.x, y: e.y }),
+      body: JSON.stringify({
+        x: e.x,
+        y: e.y,
+        speed: speed,
+      }),
     });
   };
 
   const handleSkipForward = () => {
-    fetch(host + "/skipForward");
+    createEvent(host + "/skipForward");
   };
 
   const handleSkipBackward = () => {
-    fetch(host + "/skipBackward");
+    createEvent(host + "/skipBackward");
   };
 
   const handleLeftClick = () => {
-    fetch(host + "/clickLeft");
+    createEvent(host + "/clickLeft");
   };
 
   const handleRightClick = () => {
-    fetch(host + "/clickRight");
+    createEvent(host + "/clickRight");
   };
 
-  return (
+  const toSettings = () => {
+    setPage("settings");
+  };
+
+  return page === "remote" ? (
     <div className="remote-container">
+      <div className={"hdr"}>
+        <p>
+          Current host: <span>{host}</span>
+        </p>
+      </div>
       <div className={"upper-container"}>
         <div className="control-container">
           <div className="icon" onClick={increaseVolume}>
@@ -144,17 +191,20 @@ export const RemoteControl = () => {
           </div>
         </div>
         <div className="control-container">
+          <div className="icon" onClick={toSettings}>
+            <IoIosSettings />
+          </div>
           <div className="icon" onClick={muteVolume}>
             <FaVolumeMute />
-          </div>
-          <div className="icon" onClick={togglePlayPause}>
-            <HiMiniPlayPause />
           </div>
         </div>
       </div>
       <div className={"skip-container"}>
         <div className={"icon"} onClick={handleSkipBackward}>
           <IoIosSkipBackward />
+        </div>
+        <div className="icon" onClick={togglePlayPause}>
+          <HiMiniPlayPause />
         </div>
         <div className={"icon"} onClick={handleSkipForward}>
           <IoIosSkipForward />
@@ -208,5 +258,15 @@ export const RemoteControl = () => {
         </div>
       </div>
     </div>
+  ) : page === "settings" ? (
+    <RemoteSettings
+      host={host}
+      setHost={setHost}
+      speed={speed}
+      setSpeed={setSpeed}
+      setPage={setPage}
+    />
+  ) : (
+    <></>
   );
 };
