@@ -1,7 +1,9 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, Response
 import pyautogui
 from pynput.keyboard import Key, Controller
 from flask_cors import CORS
+import cv2
+import numpy as np
 
 app = Flask(__name__)
 CORS(app)
@@ -127,6 +129,33 @@ def moveMouse():
     except ValueError:
         pass
     return "ok"
+
+
+def generate_frames():
+    while True:
+        screenshot = pyautogui.screenshot()
+
+        frame = np.array(screenshot)
+
+        frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+
+        x, y = pyautogui.position()
+
+        cv2.circle(frame, (x, y), 10, (0, 0, 255), -1)
+
+        _, buffer = cv2.imencode(".jpg", frame)
+
+        yield (
+            b"--frame\r\n"
+            b"Content-Type: image/jpeg\r\n\r\n" + buffer.tobytes() + b"\r\n"
+        )
+
+
+@app.route("/stream")
+def stream():
+    return Response(
+        generate_frames(), mimetype="multipart/x-mixed-replace; boundary=frame"
+    )
 
 
 if __name__ == "__main__":

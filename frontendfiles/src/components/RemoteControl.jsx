@@ -8,7 +8,6 @@ import {
   FaBackspace,
   FaArrowRight,
 } from "react-icons/fa";
-import "../css/remoteControl.css";
 import { HiMiniPlayPause } from "react-icons/hi2";
 import { AiOutlineEnter } from "react-icons/ai";
 import { ImTab } from "react-icons/im";
@@ -27,7 +26,7 @@ import {
   RxTriangleUp,
 } from "react-icons/rx";
 import { RemoteSettings } from "./RemoteSettings.jsx";
-import { CiSettings } from "react-icons/ci";
+import axios from "axios";
 
 export const saveDataToLocalStorage = (key, data) => {
   localStorage.setItem(key, JSON.stringify(data));
@@ -40,12 +39,6 @@ export const getDataFromLocalStorage = (key) => {
     return;
   }
   return data;
-};
-
-export const createEvent = (address, payload) => {
-  try {
-    fetch(address, payload ?? {});
-  } catch (e) {}
 };
 
 export const RemoteControl = () => {
@@ -61,37 +54,70 @@ export const RemoteControl = () => {
       : 30,
   );
   const [page, setPage] = useState("remote");
+  const [isStreamVisible, setIsStreamVisible] = useState(false);
 
   function increaseVolume() {
-    createEvent(host + "/volUp");
+    try {
+      const resp = axios.get(host + "/volUp");
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   function decreaseVolume() {
-    createEvent(host + "/volDown");
+    try {
+      const resp = axios.get(host + "/volDown");
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   function muteVolume() {
-    createEvent(host + "/volMute");
+    try {
+      const resp = axios.get(host + "/volMute");
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   function togglePlayPause() {
-    createEvent(host + "/playpause");
+    try {
+      const resp = axios.get(host + "/playpause");
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   function moveUp() {
-    createEvent(host + "/up");
+    try {
+      const resp = axios.get(host + "/up");
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   function moveDown() {
-    createEvent(host + "/down");
+    try {
+      const resp = axios.get(host + "/down");
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   function moveLeft() {
-    createEvent(host + "/left");
+    try {
+      const resp = axios.get(host + "/left");
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   function moveRight() {
-    createEvent(host + "/right");
+    try {
+      const resp = axios.get(host + "/right");
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   const handleInputChange = (e) => {
@@ -100,58 +126,82 @@ export const RemoteControl = () => {
 
   const handleSend = () => {
     if (text) {
-      createEvent(host + "/typeText", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ text: text }),
-      });
+      try {
+        const resp = axios.post(host + "/typeText", { text: text });
+      } catch (e) {
+        console.log(e);
+      }
+
       setText("");
     }
   };
 
   const handleEnter = () => {
-    createEvent(host + "/enter");
+    try {
+      const resp = axios.get(host + "/enter");
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const handleBackspace = () => {
-    createEvent(host + "/backspace");
+    try {
+      const resp = axios.get(host + "/backspace");
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const handleTab = () => {
-    createEvent(host + "/tab");
+    try {
+      const resp = axios.get(host + "/tab");
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const handleMove = (e) => {
-    //console.log("move");
-    createEvent(host + "/moveMouse", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+    try {
+      const resp = axios.post(host + "/moveMouse", {
         x: e.x,
         y: e.y,
         speed: speed,
-      }),
-    });
+      });
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const handleSkipForward = () => {
-    createEvent(host + "/skipForward");
+    try {
+      const resp = axios.get(host + "/skipForward");
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const handleSkipBackward = () => {
-    createEvent(host + "/skipBackward");
+    try {
+      const resp = axios.get(host + "/skipBackward");
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const handleLeftClick = () => {
-    createEvent(host + "/clickLeft");
+    try {
+      const resp = axios.get(host + "/clickLeft");
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const handleRightClick = () => {
-    createEvent(host + "/clickRight");
+    try {
+      const resp = axios.get(host + "/clickRight");
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const toSettings = () => {
@@ -159,81 +209,171 @@ export const RemoteControl = () => {
   };
 
   return page === "remote" ? (
-    <div className="remote-container">
-      <div className={"hdr"}>
+    <div className="w-[95vw] h-fit flex flex-col items-center bg-[#1c1c1e] text-white p-4 rounded-2xl ">
+      <div
+        className={
+          " w-full text-lg h-fit flex flex-row items-center justify-center "
+        }
+      >
         <p>
-          Current host: <span>{host}</span>
+          Current host: <span className={"text-gray-400"}>{host}</span>
         </p>
       </div>
-      <div className={"upper-container"}>
-        <div className="control-container">
-          <div className="icon" onClick={increaseVolume}>
-            <FaVolumeUp />
-          </div>
-          <div className="icon" onClick={decreaseVolume}>
-            <FaVolumeDown />
-          </div>
-        </div>
-        <div className="arrows-container">
-          <div className="side-arrows">
-            <div className="arrow arrow-left" onClick={moveLeft}>
-              <RxTriangleLeft />
-            </div>
-            <div className="arrow arrow-right" onClick={moveRight}>
-              <RxTriangleRight />
-            </div>
-          </div>
-          <div className="arrow arrow-up" onClick={moveUp}>
-            <RxTriangleUp />
-          </div>
-          <div className="arrow arrow-down" onClick={moveDown}>
-            <RxTriangleDown />
-          </div>
-        </div>
-        <div className="control-container">
-          <div className="icon" onClick={toSettings}>
-            <IoIosSettings />
-          </div>
-          <div className="icon" onClick={muteVolume}>
-            <FaVolumeMute />
-          </div>
-        </div>
+      <div
+        className={
+          "w-full flex flex-row items-center justify-center text-xl my-4 "
+        }
+      >
+        <p
+          className={"px-4 py-2 bg-old rounded-xl"}
+          onClick={() => {
+            setIsStreamVisible(!isStreamVisible);
+          }}
+        >
+          {isStreamVisible ? "Volume Control" : "Stream"}
+        </p>
       </div>
-      <div className={"skip-container"}>
-        <div className={"icon"} onClick={handleSkipBackward}>
-          <IoIosSkipBackward />
+      {/*
+      asd
+      */}
+      {isStreamVisible ? (
+        <div className={" rounded-xl w-full h-48 mb-4"}>
+          <img alt={"stream"} src={host + "/stream"} />
         </div>
-        <div className="icon" onClick={togglePlayPause}>
-          <HiMiniPlayPause />
+      ) : (
+        <div className={"w-full h-fit "}>
+          <div
+            className={
+              " w-full h-fit flex flex-row items-center justify-center mt-5"
+            }
+          >
+            <div className=" flex justify-around flex-col items-center w-full mb-2.5  gap-2.5">
+              <div
+                className="cursor-pointer bg-old p-3 rounded-2xl w-12 h-16 flex flex-col items-center justify-center text-3xl"
+                onClick={increaseVolume}
+              >
+                <FaVolumeUp />
+              </div>
+              <div
+                className="cursor-pointer bg-old p-3 rounded-2xl w-12 h-16 flex flex-col items-center justify-center text-3xl"
+                onClick={decreaseVolume}
+              >
+                <FaVolumeDown />
+              </div>
+            </div>
+            <div className=" relative min-w-36 max-w-36 min-h-36  max-h-36 flex flex-col items-center justify-center mb-2.5">
+              <div
+                className="absolute  top-[50%] left-[50%] w-full h-full flex justify-between"
+                style={{ transform: "translate(-50%, -50%)" }}
+              >
+                <div
+                  className="absolute cursor-pointer text-white bg-old p-3 rounded-full w-14 h-14 flex flex-row items-center justify-center text-6xl   left-0 "
+                  style={{ transform: "translateY(45px)" }}
+                  onClick={moveLeft}
+                >
+                  <RxTriangleLeft />
+                </div>
+                <div
+                  className="absolute cursor-pointer text-white bg-old p-3 rounded-full w-14 h-14 flex flex-row items-center justify-center text-6xl right-0 "
+                  style={{ transform: "translateY(45px)" }}
+                  onClick={moveRight}
+                >
+                  <RxTriangleRight />
+                </div>
+              </div>
+              <div
+                className="absolute cursor-pointer text-white bg-old p-3 rounded-full w-14 h-14 flex flex-row items-center justify-center text-3xl top-0 left-[50%] "
+                style={{ transform: "translateX(-50%)" }}
+                onClick={moveUp}
+              >
+                <RxTriangleUp />
+              </div>
+              <div
+                className="absolute cursor-pointer text-white bg-old p-3 rounded-full w-14 h-14 flex flex-row items-center justify-center text-3xl bottom-0 left-[50%]"
+                style={{ transform: "translateX(-50%)" }}
+                onClick={moveDown}
+              >
+                <RxTriangleDown />
+              </div>
+            </div>
+            <div className=" flex justify-around flex-col items-center w-full mb-2.5 gap-2.5">
+              <div
+                className=" cursor-pointer bg-old p-3 rounded-2xl w-12 h-16 flex flex-col items-center justify-center text-3xl"
+                onClick={toSettings}
+              >
+                <IoIosSettings />
+              </div>
+              <div
+                className=" cursor-pointer bg-old p-3 rounded-2xl w-12 h-16 flex flex-col items-center justify-center text-3xl"
+                onClick={muteVolume}
+              >
+                <FaVolumeMute />
+              </div>
+            </div>
+          </div>
+          <div
+            className={
+              " w-full h-fit flex flex-row justify-evenly items-center m-1.5 mb-2.5 ml-0 mr-0 gap-2.5"
+            }
+          >
+            <div
+              className={
+                " cursor-pointer bg-old p-3 rounded-2xl w-20 h-12 flex flex-col items-center justify-center text-3xl"
+              }
+              onClick={handleSkipBackward}
+            >
+              <IoIosSkipBackward />
+            </div>
+            <div
+              className=" cursor-pointer bg-old p-3 rounded-2xl w-20 h-12 flex flex-col items-center justify-center text-3xl"
+              onClick={togglePlayPause}
+            >
+              <HiMiniPlayPause />
+            </div>
+            <div
+              className={
+                " cursor-pointer bg-old p-3 rounded-2xl w-20 h-12 flex flex-col items-center justify-center text-3xl"
+              }
+              onClick={handleSkipForward}
+            >
+              <IoIosSkipForward />
+            </div>
+          </div>
         </div>
-        <div className={"icon"} onClick={handleSkipForward}>
-          <IoIosSkipForward />
-        </div>
-      </div>
+      )}
 
-      <div className="input-section">
-        <div className="input-row">
+      <div className=" flex flex-col justify-between items-center w-[88%] mb-5">
+        <div className="input-row w-full flex flex-row items-center justify-center mb-2.5 gap-2.5">
           <input
             type="text"
             placeholder="Type here"
-            className="text-input"
+            className=" p-3 w-2/3 h-12 rounded-xl border-none bg-old text-white  text-lg justify-center items-start"
             value={text}
             onChange={handleInputChange}
           />
-          <div className="send-button" onClick={handleSend}>
+          <div
+            className="w-1/3 h-12 flex flex-col items-center justify-center p-3 rounded-xl border-none text-white text-base cursor-pointer bg-old"
+            onClick={handleSend}
+          >
             Send
           </div>
         </div>
-        <div className="button-row">
-          <div className="icon-button enter-button" onClick={handleEnter}>
+        <div className=" w-full flex flex-row items-center justify-center gap-2.5 ">
+          <div
+            className="w-1/3 h-12 flex items-center justify-center bg-old transition-all duration-300  p-3 rounded-xl border-none text-white text-xl cursor-pointer   enter-button"
+            onClick={handleEnter}
+          >
             <AiOutlineEnter />
           </div>
 
-          <div className={"icon-button tab-button"} onClick={handleTab}>
+          <div
+            className="w-1/3 h-12 flex items-center justify-center bg-old transition-all duration-300  p-3 rounded-xl border-none text-white text-xl cursor-pointer   enter-button"
+            onClick={handleTab}
+          >
             <ImTab />
           </div>
           <div
-            className="icon-button backspace-button"
+            className="w-1/3 h-12 flex items-center justify-center bg-old transition-all duration-300  p-3 rounded-xl border-none text-white text-xl cursor-pointer   enter-button"
             onClick={handleBackspace}
           >
             <FaBackspace />
@@ -241,8 +381,13 @@ export const RemoteControl = () => {
         </div>
       </div>
 
-      <div className={"mouse-container"}>
-        <div className={"mb"} onClick={handleLeftClick}>
+      <div className={" w-full flex flex-row justify-evenly items-center"}>
+        <div
+          className={
+            "w-16 h-32 flex flex-col items-center justify-center cursor-pointer bg-old p-3 rounded-2xl text-5xl"
+          }
+          onClick={handleLeftClick}
+        >
           <PiMouseLeftClick />
         </div>
         <Joystick
@@ -253,7 +398,12 @@ export const RemoteControl = () => {
           move={handleMove}
           throttle={100}
         ></Joystick>
-        <div className={"mb"} onClick={handleRightClick}>
+        <div
+          className={
+            "w-16 h-32 flex flex-col items-center justify-center cursor-pointer bg-old p-3 rounded-2xl text-5xl"
+          }
+          onClick={handleRightClick}
+        >
           <PiMouseRightClick />
         </div>
       </div>

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "../css/remoteSettings.css";
 import { saveDataToLocalStorage } from "./RemoteControl.jsx";
 import { IoIosArrowBack, IoMdHome } from "react-icons/io";
 
@@ -56,49 +55,65 @@ export const RemoteSettings = (props) => {
   };
 
   return (
-    <div className={"settings-container"}>
-      <div className={"hdr"}>
-        <div className={"home"} onClick={toRemote}>
+    <div
+      className={
+        "w-[95vw] h-fit flex flex-col items-center bg-[#1c1c1e] text-white p-4 rounded-2xl"
+      }
+    >
+      <div className={" relative w-full text-3xl h-fit mb-3 text-center"}>
+        <div
+          className={
+            " w-10  h-10 absolute flex items-center justify-center cursor-pointer bg-old p-3 rounded-full text-2xl"
+          }
+          onClick={toRemote}
+        >
           <IoIosArrowBack />
         </div>
-        <p>Settings</p>
+        <p className={"mt-0 mb-0"}>Settings</p>
       </div>
-      <div className="setting-item">
-        <label htmlFor="host">Host:</label>
+      <div className=" flex flex-col mb-5 w-[80%]">
+        <label htmlFor="host" className={"mb-2.5 text-xl "}>
+          Host:
+        </label>
         <input
           type="text"
           id="host"
           name="host"
           value={host}
           onChange={handleHostChange}
-          className="setting-input"
+          className=" p-3 w-full bg-old border-none rounded-xl text-white font-medium"
         />
       </div>
 
-      <div className="setting-item">
-        <label htmlFor="speed">Speed:</label>
+      <div className=" flex flex-col mb-5 w-[80%]">
+        <label htmlFor="speed" className={"mb-2.5 text-xl "}>
+          Speed:
+        </label>
         <input
           type="number"
           id="speed"
           name="speed"
           value={speed}
           onChange={handleSpeedChange}
-          className="setting-input"
+          className=" p-3 w-full bg-old border-none rounded-xl text-white font-medium"
           onKeyDown={preventNegativeValues}
           max={maxSpeed}
           min={1}
         />
       </div>
 
-      <div className="setting-actions">
+      <div className=" flex flex-row justify-between items-center text-xl">
         <button
-          className={allowed ? "save-button" : "save-button disabled"}
+          className={`p-3 border-none rounded-2xl cursor-pointer bg-old text-white transition-all duration-300 m-1.5 disabled:cursor-not-allowed disabled:bg-red-500 `}
           disabled={!allowed}
           onClick={saveSettings}
         >
           Save Settings
         </button>
-        <button className="reset-button" onClick={resetSettings}>
+        <button
+          className="p-3 border-none rounded-2xl cursor-pointer bg-old text-white transition-all duration-300 m-1.5"
+          onClick={resetSettings}
+        >
           Reset
         </button>
       </div>
